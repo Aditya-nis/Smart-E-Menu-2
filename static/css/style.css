@@ -1,0 +1,1344 @@
+/* ==========================================================================
+   E-MENU - PREMIUM RESTAURANT ORDERING WEB APPLICATION
+   Custom Stylesheet (Bootstrap 5 Extension)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ROOT VARIABLES & THEME TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  --primary: #FF6B35;
+  --primary-hover: #E85A24;
+  --secondary: #FF914D;
+  --accent: #FFD166;
+  --bg-light: #F8F9FA;
+  --card-bg: #FFFFFF;
+  --dark-text: #1E293B;
+  --muted-text: #64748B;
+  --success: #10B981;
+  --danger: #EF4444;
+  --border-color: #E2E8F0;
+
+  /* Typography */
+  --font-poppins: 'Poppins', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(255, 107, 53, 0.15);
+  --shadow-hover: 0 20px 35px rgba(255, 107, 53, 0.22);
+
+  /* Border Radii */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 50px;
+
+  /* Transitions */
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL RESETS & BASE STYLES
+   -------------------------------------------------------------------------- */
+body {
+  font-family: var(--font-inter);
+  background-color: var(--bg-light);
+  color: var(--dark-text);
+  overflow-x: hidden;
+  padding-top: 76px; /* Account for fixed header */
+  line-height: 1.6;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-poppins);
+  font-weight: 700;
+  color: var(--dark-text);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-fast);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F3F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #FFB396;
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* --------------------------------------------------------------------------
+   3. UTILITIES & GLASSMORPHISM
+   -------------------------------------------------------------------------- */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-md);
+}
+
+.glass-navbar {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.bg-primary-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-primary-gradient {
+  position: relative;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: #FFFFFF !important;
+  border: none;
+  font-weight: 600;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-bounce);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.btn-primary-gradient::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: rotate(30deg) translateY(-100%);
+  transition: transform 0.6s ease;
+}
+
+.btn-primary-gradient:hover::after {
+  transform: rotate(30deg) translateY(100%);
+}
+
+.btn-primary-gradient:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+  color: #FFFFFF !important;
+}
+
+.btn-primary-gradient:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-outline-custom {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+  font-weight: 600;
+  padding: 0.55rem 1.4rem;
+  border-radius: var(--radius-pill);
+  transition: var(--transition-fast);
+}
+
+.btn-outline-custom:hover {
+  background: var(--primary);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   4. NAVIGATION BAR
+   -------------------------------------------------------------------------- */
+.navbar-brand {
+  font-family: var(--font-poppins);
+  font-weight: 800;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: 0 6px 15px rgba(255, 107, 53, 0.3);
+  animation: pulse-glow 3s infinite ease-in-out;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: var(--dark-text) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--radius-pill);
+  transition: var(--transition-fast);
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--primary) !important;
+  background-color: rgba(255, 107, 53, 0.08);
+}
+
+.cart-badge-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 107, 53, 0.08);
+  color: var(--primary);
+  transition: var(--transition-bounce);
+}
+
+.cart-badge-icon:hover {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.08);
+}
+
+.cart-badge-icon .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--primary);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25em 0.55em;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  animation: badge-pop 0.3s ease;
+}
+
+/* Table Badge Dropdown in Navbar */
+.table-pill-btn {
+  background: rgba(255, 209, 102, 0.25);
+  color: #B45309;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.table-pill-btn:hover {
+  background: rgba(255, 209, 102, 0.4);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   5. HERO BANNER & LANDING PAGE
+   -------------------------------------------------------------------------- */
+.hero-section {
+  position: relative;
+  padding: 3.5rem 0 4.5rem 0;
+  background: radial-gradient(circle at 90% 10%, rgba(255, 209, 102, 0.2) 0%, transparent 40%),
+              radial-gradient(circle at 10% 90%, rgba(255, 107, 53, 0.12) 0%, transparent 40%);
+  overflow: hidden;
+}
+
+.hero-img-container {
+  position: relative;
+  text-align: center;
+}
+
+.hero-img-main {
+  width: 100%;
+  max-width: 440px;
+  border-radius: 50%;
+  box-shadow: var(--shadow-lg);
+  border: 8px solid white;
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-floating-card {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1.2rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  animation: float-reverse 7s ease-in-out infinite;
+  z-index: 3;
+}
+
+.hero-floating-card.card-1 {
+  top: 10%;
+  left: -10px;
+}
+
+.hero-floating-card.card-2 {
+  bottom: 8%;
+  right: -10px;
+}
+
+.stat-box {
+  background: white;
+  padding: 1.25rem 1rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: var(--transition-bounce);
+}
+
+.stat-box:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255, 107, 53, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   6. FOOD CARDS & BADGES
+   -------------------------------------------------------------------------- */
+.food-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.food-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(255, 107, 53, 0.35);
+}
+
+.food-card-img-wrapper {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  background-color: #F1F5F9;
+}
+
+.food-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.food-card:hover .food-card-img {
+  transform: scale(1.08);
+}
+
+.diet-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.diet-badge.veg {
+  border: 2px solid #10B981;
+}
+
+.diet-badge.veg::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #10B981;
+  border-radius: 50%;
+}
+
+.diet-badge.non-veg {
+  border: 2px solid #EF4444;
+}
+
+.diet-badge.non-veg::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 9px solid #EF4444;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94A3B8;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  transition: var(--transition-bounce);
+  cursor: pointer;
+}
+
+.fav-btn:hover, .fav-btn.active {
+  color: #EF4444;
+  background: white;
+  transform: scale(1.15);
+}
+
+.fav-btn.active i {
+  animation: heart-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.prep-time-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(15, 23, 42, 0.75);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.food-card-body {
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.food-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  color: var(--dark-text);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.food-title:hover {
+  color: var(--primary);
+}
+
+.food-desc {
+  font-size: 0.825rem;
+  color: var(--muted-text);
+  margin-bottom: 0.9rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.45;
+}
+
+.food-card-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #E2E8F0;
+}
+
+.food-price {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.food-rating {
+  font-size: 0.75rem;
+  background: rgba(255, 209, 102, 0.25);
+  color: #B45309;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-add-cart {
+  background: rgba(255, 107, 53, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(255, 107, 53, 0.25);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-pill);
+  transition: var(--transition-bounce);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-add-cart:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 14px rgba(255, 107, 53, 0.35);
+}
+
+.btn-add-cart:active {
+  transform: scale(0.95);
+}
+
+/* --------------------------------------------------------------------------
+   7. CATEGORY SLIDER & FILTERS
+   -------------------------------------------------------------------------- */
+.category-slider {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.5rem 0.25rem 1rem 0.25rem;
+  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.category-slider::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.category-btn {
+  white-space: nowrap;
+  background: white;
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1.3rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--dark-text);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+.category-btn:hover, .category-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Filter Switches */
+.diet-filter-pill {
+  background: white;
+  padding: 0.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-color);
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.diet-filter-btn {
+  border: none;
+  background: transparent;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  color: var(--muted-text);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.diet-filter-btn.active {
+  background: var(--dark-text);
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* --------------------------------------------------------------------------
+   8. QUANTITY SELECTOR & MODALS (FIXED & RESPONSIVE)
+   -------------------------------------------------------------------------- */
+.qty-control {
+  display: inline-flex;
+  align-items: center;
+  background: #F1F5F9;
+  border-radius: var(--radius-pill);
+  padding: 0.2rem;
+  border: 1px solid var(--border-color);
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: var(--dark-text);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transition: var(--transition-bounce);
+  cursor: pointer;
+}
+
+.qty-btn:hover {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.qty-val {
+  padding: 0 0.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* Custom Modal styling & Close button fixes */
+.modal-content {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: none;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-header .btn-close,
+.modal-content > .btn-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1060;
+  width: 38px;
+  height: 38px;
+  background-color: #F1F5F9;
+  border-radius: 50%;
+  opacity: 0.9;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  transition: var(--transition-bounce);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+}
+
+.modal-header .btn-close:hover,
+.modal-content > .btn-close:hover {
+  background-color: var(--danger);
+  color: white;
+  opacity: 1;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* --------------------------------------------------------------------------
+   9. ORDER TRACKING TIMELINE
+   -------------------------------------------------------------------------- */
+.tracking-timeline {
+  position: relative;
+  padding: 2rem 0 1rem 0;
+  margin: 1rem 0;
+}
+
+.tracking-progress-bar {
+  position: absolute;
+  top: 36px;
+  left: 8%;
+  right: 8%;
+  height: 4px;
+  background: #E2E8F0;
+  z-index: 1;
+}
+
+.tracking-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  width: 40%;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 4px;
+}
+
+.tracking-steps {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tracking-step {
+  text-align: center;
+  flex: 1;
+}
+
+.step-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.6rem auto;
+  font-size: 1.25rem;
+  color: #94A3B8;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+}
+
+.tracking-step.completed .step-icon-wrapper {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+  transform: scale(1.05);
+}
+
+.tracking-step.active .step-icon-wrapper {
+  background: var(--primary);
+  border-color: #FFD166;
+  color: white;
+  transform: scale(1.12);
+  animation: pulse-ring 2s infinite;
+}
+
+.step-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted-text);
+  white-space: nowrap;
+}
+
+.tracking-step.active .step-label,
+.tracking-step.completed .step-label {
+  color: var(--dark-text);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   10. KITCHEN DASHBOARD CARDS
+   -------------------------------------------------------------------------- */
+.kitchen-card {
+  background: white;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+  overflow: hidden;
+}
+
+.kitchen-card.priority-high {
+  border-color: var(--danger);
+}
+
+.kitchen-card.priority-high .kitchen-header {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.kitchen-header {
+  padding: 0.9rem 1.1rem;
+  background: #F8FAFC;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-badge {
+  background: var(--dark-text);
+  color: white;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+}
+
+.status-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.received { background: #E0F2FE; color: #0284C7; }
+.status-badge.preparing { background: #FEF3C7; color: #D97706; }
+.status-badge.ready { background: #DCFCE7; color: #16A34A; }
+.status-badge.served { background: #F3E8FF; color: #9333EA; }
+
+.kitchen-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #F1F5F9;
+  font-size: 0.9rem;
+}
+
+.kitchen-item-row:last-child {
+  border-bottom: none;
+}
+
+/* --------------------------------------------------------------------------
+   11. INVOICE & BILLING PAGE
+   -------------------------------------------------------------------------- */
+.invoice-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.invoice-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.payment-method-card {
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  text-align: center;
+}
+
+.payment-method-card:hover, .payment-method-card.selected {
+  border-color: var(--primary);
+  background: rgba(255, 107, 53, 0.05);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   12. KEYFRAME ANIMATIONS
+   -------------------------------------------------------------------------- */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes float-reverse {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(8px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(255, 107, 53, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(255, 209, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0); }
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4) rotate(-10deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-in forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Toast Container */
+.toast-container {
+  z-index: 1100;
+}
+
+/* Footer Styling */
+footer {
+  background: var(--dark-text);
+  color: #CBD5E1;
+  padding: 3.5rem 0 2rem 0;
+  margin-top: 4rem;
+}
+
+footer a {
+  color: #94A3B8;
+}
+
+footer a:hover {
+  color: var(--primary);
+}
+
+/* --------------------------------------------------------------------------
+   14. SMARTPHONE BOTTOM NAVIGATION & OFFCANVAS DRAWER
+   -------------------------------------------------------------------------- */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.08);
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 0.25rem;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+  text-decoration: none !important;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  min-width: 56px;
+  cursor: pointer;
+}
+
+.mobile-nav-item i {
+  font-size: 1.35rem;
+  margin-bottom: 2px;
+  transition: transform 0.25s ease;
+}
+
+.mobile-nav-item.active {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.mobile-nav-item.active i {
+  transform: translateY(-2px) scale(1.18);
+}
+
+.mobile-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  width: 22px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(255, 107, 53, 0.4);
+}
+
+.mobile-nav-badge {
+  position: absolute;
+  top: 1px;
+  right: 10px;
+  background-color: var(--primary);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.15em 0.5em;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.mobile-active-dot {
+  position: absolute;
+  top: 4px;
+  right: 14px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--success);
+  border-radius: 50%;
+  border: 2px solid white;
+  animation: pulse-ring 2s infinite;
+}
+
+/* Call Waiter Action Button */
+.call-waiter-btn {
+  background: rgba(255, 107, 53, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(255, 107, 53, 0.25);
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.775rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: var(--transition-bounce);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.call-waiter-btn:hover, .call-waiter-btn:active {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.05);
+}
+
+.call-waiter-btn.calling {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+
+/* Offcanvas Mobile Drawer Styling */
+.offcanvas-mobile-drawer {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.mobile-drawer-header {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(78, 205, 196, 0.05));
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.25rem 1.5rem;
+}
+
+.mobile-drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  color: var(--dark-text);
+  font-weight: 600;
+  border-radius: 12px;
+  text-decoration: none !important;
+  transition: var(--transition-fast);
+  margin-bottom: 0.25rem;
+}
+
+.mobile-drawer-link i {
+  font-size: 1.25rem;
+  color: var(--muted-text);
+  width: 24px;
+  text-align: center;
+  transition: color 0.2s ease;
+}
+
+.mobile-drawer-link:hover, .mobile-drawer-link.active {
+  background: rgba(255, 107, 53, 0.08);
+  color: var(--primary);
+}
+
+.mobile-drawer-link:hover i, .mobile-drawer-link.active i {
+  color: var(--primary);
+}
+
+@media (max-width: 991.98px) {
+  body {
+    padding-bottom: 74px; /* Space for sticky bottom navbar */
+  }
+
+  footer {
+    padding-bottom: 5rem; /* Extra padding so bottom nav doesn't cover footer links */
+  }
+}
+
+/* --------------------------------------------------------------------------
+   13. SMARTPHONE & RESPONSIVE MEDIA QUERIES (MOBILE OPTIMIZATIONS)
+   -------------------------------------------------------------------------- */
+@media (max-width: 767.98px) {
+  body {
+    padding-top: 68px;
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+
+  .hero-section {
+    padding: 2rem 0 3rem 0;
+  }
+
+  .hero-img-main {
+    max-width: 280px;
+  }
+
+  .hero-floating-card {
+    display: none; /* Hide floating cards on small screens to prevent overflow */
+  }
+
+  .food-card-img-wrapper {
+    height: 170px;
+  }
+
+  /* Responsive Tracking Steps on Mobile */
+  .tracking-timeline {
+    padding: 1.5rem 0 0.5rem 0;
+  }
+
+  .tracking-progress-bar {
+    top: 26px;
+    left: 6%;
+    right: 6%;
+  }
+
+  .step-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+    border-width: 2px;
+  }
+
+  .step-label {
+    font-size: 0.65rem;
+  }
+
+  .invoice-card {
+    padding: 1.25rem;
+  }
+
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .modal-body {
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .food-card-body {
+    padding: 0.9rem;
+  }
+
+  .food-title {
+    font-size: 1rem;
+  }
+
+  .food-desc {
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .btn-add-cart {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  /* Mobile Kitchen Dashboard Filter Slider */
+  .kitchen-filter-slider {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+
+  .kitchen-filter-slider::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Smartphone Navbar Header Optimizations */
+@media (max-width: 991.98px) {
+  .navbar .container {
+    flex-wrap: nowrap !important;
+    gap: 0.35rem;
+  }
+
+  .navbar-brand {
+    font-size: 1.1rem !important;
+    white-space: nowrap;
+    padding: 0;
+    margin-right: 0.25rem !important;
+  }
+
+  .navbar-brand .brand-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.95rem !important;
+  }
+}
+
+.table-pill-btn-sm {
+  background: rgba(255, 107, 53, 0.08);
+  border: 1px solid rgba(255, 107, 53, 0.25);
+  color: var(--dark-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+
+.table-pill-btn-sm:hover, .table-pill-btn-sm:active {
+  background: rgba(255, 107, 53, 0.18);
+  color: var(--primary);
+  transform: scale(1.02);
+}
+
+/* Food Card Pointer & Direct Modal Clickability */
+.food-card {
+  cursor: pointer;
+}
+
+.food-card-img-wrapper, .food-title, .food-desc {
+  cursor: pointer;
+}
+
+/* Table Card Component for Available Tables Page */
+.table-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.table-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255, 107, 53, 0.3);
+}
+
+.table-card.is-current {
+  border: 2px solid var(--primary);
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 107, 53, 0.03) 100%);
+  box-shadow: var(--shadow-sm);
+}
+
+.table-card.is-occupied {
+  opacity: 0.88;
+  background: #f8fafc;
+}
+
+.table-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+/* Print Invoice Specific CSS */
+@media print {
+  body {
+    padding-top: 0;
+    background: white;
+  }
+  .no-print, navbar, footer, .btn, .payment-section {
+    display: none !important;
+  }
+  .invoice-card {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+}
+

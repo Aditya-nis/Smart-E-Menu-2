@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart | E-Menu</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'css/style.css'%}">
+
+</head>
+<body>
+
+  <!-- ==========================================
+       NAVBAR
+       ========================================== -->
+{% include 'header.html'%}
+
+
+
+
+
+
+  <!-- ==========================================
+       CART PAGE CONTENT
+       ========================================== -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold mb-0">Your Food Order</h3>
+            <a href="{% url 'menu'%}" class="text-primary fs-sm fw-semibold text-decoration-none">
+              <i class="bi bi-plus-lg me-1"></i> Add More Items
+            </a>
+          </div>
+
+          <!-- Cart Items Container -->
+          <div id="cartItemsContainer">
+            <!-- JS populated -->
+          </div>
+
+          <!-- Special Chef Instructions Card -->
+          <div class="card border-0 shadow-sm rounded-4 mt-4 p-3">
+            <label class="form-label fw-bold fs-sm text-dark mb-1"><i class="bi bi-chat-left-text me-2 text-primary"></i>Special Instructions for Chef</label>
+            <textarea id="orderNotes" class="form-control border-0 bg-light rounded-3 fs-sm" rows="2" placeholder="e.g. Please make chicken extra tender, serving allergies, extra napkins..."></textarea>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
+            <h4 class="fw-bold mb-3">Order Summary</h4>
+
+            <!-- Table Number Indicator -->
+            <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 mb-3 border">
+              <div>
+                <span class="fs-xs text-muted d-block">Serving Location</span>
+                <strong class="text-dark" id="cartTableBadge">Table 4 - Garden Patio</strong>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary rounded-pill" data-bs-toggle="modal" data-bs-target="#tableSelectModal">Change</button>
+            </div>
+
+            <!-- Coupon Code Section -->
+            <div class="mb-4">
+              <label class="form-label fs-xs fw-semibold text-muted">Have a Promo Coupon?</label>
+              <div class="input-group">
+                <input type="text" id="couponInput" class="form-control text-uppercase rounded-start-pill" placeholder="e.g. WELCOME20">
+                <button class="btn btn-dark rounded-end-pill px-3" type="button" onclick="applyCoupon()">Apply</button>
+              </div>
+              <small class="text-muted fs-xs mt-1 d-block">Try <strong>WELCOME20</strong> for 20% off or <strong>EMENU10</strong></small>
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="border-top border-bottom py-3 mb-3">
+              <div class="d-flex justify-content-between fs-sm text-muted mb-2">
+                <span>Items Subtotal</span>
+                <span id="cartSubtotal" class="fw-semibold text-dark">₹0</span>
+              </div>
+              <div class="d-flex justify-content-between fs-sm text-muted mb-2">
+                <span>GST & Restaurant Charges (5%)</span>
+                <span id="cartGst" class="fw-semibold text-dark">₹0</span>
+              </div>
+              <div class="d-flex justify-content-between fs-sm text-success mb-0">
+                <span>Promo Discount</span>
+                <span id="cartDiscount" class="fw-semibold">-₹0</span>
+              </div>
+            </div>
+
+            <!-- Grand Total -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div>
+                <span class="fs-xs text-muted d-block">Grand Total</span>
+                <h3 id="cartGrandTotal" class="fw-extrabold text-primary mb-0">₹0</h3>
+              </div>
+              <span class="badge bg-success-subtle text-success fs-xs border border-success-subtle px-2 py-1 rounded-pill">Taxes Included</span>
+            </div>
+
+            <!-- Place Order Action -->
+            <button class="btn btn-primary-gradient w-100 py-3 fs-6" onclick="proceedToCheckout()">
+              <i class="bi bi-send-fill me-2"></i> Send Order to Kitchen
+            </button>
+
+            <div class="text-center mt-3">
+              <span class="fs-xs text-muted"><i class="bi bi-shield-lock-fill text-success me-1"></i>Direct Instant Table Dispatch</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table Select Modal -->
+  <div class="modal fade" id="tableSelectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-header-title fw-bold mb-0"><i class="bi bi-geo-alt-fill text-primary me-2"></i>Select Table Number</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted fs-sm">Select your current table.</p>
+          <div class="row g-2">
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 1')">Table 1</button></div>
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 2')">Table 2</button></div>
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 3')">Table 3</button></div>
+            <div class="col-4"><button class="btn btn-primary w-100 py-2" onclick="changeTable('Table 4')">Table 4</button></div>
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 5')">Table 5</button></div>
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 8')">Table 8</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="{% static 'css/bootstrap.min.css' %}"></script>
+  <script src="{% static 'js/script.js'%}">
+
+  </script>
+</body>
+</html>

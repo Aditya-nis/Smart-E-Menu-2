@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Profile | E-Menu</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'css/style.css'%}">
+</head>
+<body>
+
+  <!-- ==========================================
+       NAVBAR
+       ========================================== -->
+{% include 'header.html'%}
+  <!-- ==========================================
+       PROFILE HEADER
+       ========================================== -->
+  <section class="py-5 bg-white border-bottom">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-auto">
+          <div class="position-relative">
+            <img src="{%static 'icon/profile.png'%}" alt="Customer Profile" class="rounded-circle shadow" style="width: 100px; height: 100px; object-fit: cover; border: 4px solid var(--primary);">
+            <span class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle p-2" title="Active"></span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+            <h2 class="fw-bold text-dark mb-0">{{UserInfo.UserName}}</h2>
+            <span class="badge bg-warning text-dark rounded-pill fs-xs"><i class="bi bi-award-fill me-1"></i> VIP Foodie Diner</span>
+          </div>
+          <p class="text-muted fs-sm mb-2"><i class="bi bi-envelope me-1"></i>{{UserInfo.UserEmailAddress}} <i class="bi bi-telephone me-1"></i> {{UserInfo.UserContact}}</p>
+          <div class="d-flex gap-3 fs-xs text-secondary">
+            <span><strong class="text-dark">12</strong> Orders Placed</span>
+            <span>•</span>
+            <span><strong class="text-dark">3</strong> Saved Favorites</span>
+            <span>•</span>
+            <span>Preferred: <strong class="text-dark">Table 4 (Garden)</strong></span>
+          </div>
+        </div>
+        <div class="col-md-auto text-md-end">
+          <a href="{% url 'logout'%}" class="btn btn-outline-danger px-4 rounded-pill">
+            <i class="bi bi-box-arrow-right me-1"></i> Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       ORDERS & FAVORITES TABS
+       ========================================== -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row g-4">
+
+        <!-- Recent Orders History Column -->
+        <div class="col-lg-7">
+          <h4 class="fw-bold mb-3"><i class="bi bi-clock-history text-primary me-2"></i>Order History</h4>
+          <div id="profileHistoryContainer">
+            <!-- JS Populated -->
+          </div>
+        </div>
+
+        <!-- Saved Favorite Dishes Column -->
+        <div class="col-lg-5">
+          <h4 class="fw-bold mb-3"><i class="bi bi-heart-fill text-danger me-2"></i>Favorite Dishes</h4>
+          <div class="row g-2" id="profileFavContainer">
+            <!-- JS Populated -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="{% static 'css/bootstrap.min.css' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

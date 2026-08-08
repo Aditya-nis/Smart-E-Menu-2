@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Order Tracking | E-Menu</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'css/style.css'%}">
+</head>
+<body>
+
+  <!-- ==========================================
+       NAVBAR
+       ========================================== -->
+  <nav class="navbar navbar-expand-lg fixed-top glass-navbar py-2 py-lg-3">
+    <div class="container flex-nowrap align-items-center justify-content-between">
+      <a class="navbar-brand me-2 me-sm-3" href="{% url 'home'%}">
+        <div class="brand-icon">
+          <i class="bi bi-qr-code-scan"></i>
+        </div>
+        <div>
+          <span class="fw-extrabold">E-Menu</span>
+          <span class="d-none d-sm-block text-muted fs-xs font-normal" style="font-size: 0.65rem; margin-top: -4px;">DIGITAL DINING</span>
+        </div>
+      </a>
+
+      <!-- Mobile Right Controls (Single Line, No Wrap) -->
+      <div class="d-flex align-items-center gap-1.5 gap-sm-2 d-lg-none">
+        <a href="{% url 'tables'%}" class="table-pill-btn-sm" id="tablePillNavMobile">
+          <i class="bi bi-geo-alt-fill text-primary"></i> <span class="table-name-text">Table 4</span>
+        </a>
+        <button class="btn btn-light rounded-circle call-waiter-btn-top p-2" onclick="callWaiterAction()" title="Call Waiter to Table">
+          <i class="bi bi-bell-fill text-warning fs-6"></i>
+        </button>
+        <a href="{% url 'cart'%}" class="btn btn-light rounded-circle cart-badge-icon p-2 position-relative">
+          <i class="bi bi-cart3 fs-6"></i>
+          <span class="badge cart-count-badge d-none">0</span>
+        </a>
+        <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNavDrawer" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+
+      <!-- Desktop Collapse Navbar -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="{% url 'home'%}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'menu'%}">Menu</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'tables'%}">Tables</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{% url 'order-tracking' %}">Order Status</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'kitchen_dashboard'%}">Chef Kitchen</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'bill'%}">Billing</a></li>
+        </ul>
+
+        <div class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
+          <a href="{% url 'tables'%}" class="table-pill-btn" id="tablePillNav">
+            <i class="bi bi-geo-alt-fill text-primary me-1"></i> <span class="table-name-text">Table 4</span>
+          </a>
+          <button class="btn btn-outline-warning rounded-pill px-3 py-1.5 fs-xs fw-bold call-waiter-trigger-btn" onclick="callWaiterAction()">
+            <i class="bi bi-bell-fill me-1"></i> Call Waiter
+          </button>
+          <a href="{% url 'cart'%}" class="btn btn-light rounded-circle cart-badge-icon p-2 me-2">
+            <i class="bi bi-cart3 fs-5"></i>
+            <span class="badge cart-count-badge d-none">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       LIVE ORDER TRACKING SECTION
+       ========================================== -->
+  <section class="py-5">
+    <div class="container">
+      <div class="max-w-3xl mx-auto">
+
+        <!-- Active Order Card Header -->
+        <div class="card border-0 shadow-md rounded-4 overflow-hidden mb-4 animate-slide-up">
+          <div class="card-header bg-primary-gradient text-white p-4 d-flex justify-content-between align-items-center">
+            <div>
+              <span class="badge bg-white text-primary fw-bold px-3 py-1 rounded-pill mb-1">Live Order Status</span>
+              <h3 class="fw-bold mb-0 text-white" id="trackingOrderId">ORD-1042</h3>
+            </div>
+            <div class="text-end">
+              <span class="fs-xs text-white-50 d-block">Delivering To</span>
+              <strong class="fs-5 text-white" id="trackingTable">Table 4</strong>
+            </div>
+          </div>
+
+          <div class="card-body p-4">
+
+            <!-- Estimated Wait Time Countdown Banner -->
+            <div class="alert alert-warning border-0 d-flex align-items-center justify-content-between rounded-3 p-3 mb-4">
+              <div class="d-flex align-items-center gap-3">
+                <div class="fs-2 text-warning"><i class="bi bi-clock-history"></i></div>
+                <div>
+                  <h6 class="fw-bold mb-0 text-dark">Estimated Preparation Time</h6>
+                  <small class="text-muted">Chef is crafting your gourmet dishes fresh.</small>
+                </div>
+              </div>
+              <div class="text-end">
+                <span class="fs-3 fw-extrabold text-dark" id="countdownTimer">12:45</span>
+                <span class="fs-xs text-muted d-block">Mins Remaining</span>
+              </div>
+            </div>
+
+            <!-- Animated Tracking Timeline -->
+            <div class="tracking-timeline">
+              <div class="tracking-progress-bar">
+                <div class="tracking-progress-fill" id="trackingFillBar"></div>
+              </div>
+
+              <div class="tracking-steps">
+                <div class="tracking-step completed">
+                  <div class="step-icon-wrapper"><i class="bi bi-check-lg"></i></div>
+                  <div class="step-label">Received</div>
+                </div>
+                <div class="tracking-step completed">
+                  <div class="step-icon-wrapper"><i class="bi bi-check-lg"></i></div>
+                  <div class="step-label">Accepted</div>
+                </div>
+                <div class="tracking-step active">
+                  <div class="step-icon-wrapper"><i class="bi bi-egg-fried"></i></div>
+                  <div class="step-label">Preparing</div>
+                </div>
+                <div class="tracking-step">
+                  <div class="step-icon-wrapper"><i class="bi bi-fire"></i></div>
+                  <div class="step-label">Cooking</div>
+                </div>
+                <div class="tracking-step">
+                  <div class="step-icon-wrapper"><i class="bi bi-bell"></i></div>
+                  <div class="step-label">Ready</div>
+                </div>
+                <div class="tracking-step">
+                  <div class="step-icon-wrapper"><i class="bi bi-person-check"></i></div>
+                  <div class="step-label">Served</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ordered Items List Summary -->
+            <div class="bg-light p-3 rounded-4 mt-4">
+              <h5 class="fw-bold fs-6 mb-3"><i class="bi bi-bag-fill text-primary me-2"></i>Ordered Dishes Summary</h5>
+              <div id="trackingItemsContainer">
+                <!-- JS populated -->
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center pt-3 mt-2 border-top">
+                <span class="fw-bold text-muted">Total Amount Payable</span>
+                <span class="fs-4 fw-extrabold text-primary" id="trackingTotal">₹0</span>
+              </div>
+            </div>
+
+            <!-- Quick Service Buttons -->
+            <div class="row g-3 mt-4">
+              <div class="col-6">
+                <button class="btn btn-outline-dark w-100 py-2 rounded-pill fs-sm" onclick="showToast('Waiter notified! Arriving at your table shortly.', 'info')">
+                  <i class="bi bi-bell-fill me-1 text-warning"></i> Call Waiter
+                </button>
+              </div>
+              <div class="col-6">
+                <a href="{% url 'bill'%}" class="btn btn-primary-gradient w-100 py-2 rounded-pill fs-sm text-center">
+                  <i class="bi bi-receipt me-1"></i> View Invoice & Pay
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="text-center">
+          <a href="{% url 'menu'%}" class="text-muted text-decoration-none fs-sm"><i class="bi bi-arrow-left me-1"></i> Order More Dishes</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+   <script src="{% static 'css/bootstrap.min.css' %}"></script>
+  <script src="{% static 'js/script.js'%}"></script>
+</body>
+</html>

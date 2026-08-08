@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full Restaurant Menu | E-Menu</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'css/style.css'%}">
+</head>
+<body>
+
+  <!-- ==========================================
+       NAVBAR
+       ========================================== -->
+{% include 'header.html'%}
+  <!-- ==========================================
+       MENU BANNER
+       ========================================== -->
+  <section class="py-5 bg-primary-gradient text-white">
+    <div class="container text-center py-3">
+      <h1 class="display-5 fw-extrabold mb-2">Our Culinary Menu</h1>
+      <p class="lead mb-0 text-white-50 max-w-xl mx-auto">Explore authentic flavors prepared with fresh ingredients, herbs, and passion.</p>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MENU CONTENT & FILTERS
+       ========================================== -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row align-items-center g-3 mb-4">
+        <div class="col-lg-6">
+          <div class="position-relative">
+            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted fs-5"></i>
+            <input type="text" id="searchInput" class="form-control form-control-lg ps-5 rounded-pill border-0 shadow-sm" placeholder="Search menu dishes...">
+          </div>
+        </div>
+        <div class="col-lg-6 d-flex align-items-center justify-content-lg-end gap-3">
+          <span class="fs-xs fw-semibold text-muted">Diet Preference:</span>
+          <div class="diet-filter-pill">
+            <button class="diet-filter-btn active" data-diet="all">All</button>
+            <button class="diet-filter-btn" data-diet="veg"><i class="bi bi-circle-fill text-success fs-xs me-1"></i> Pure Veg</button>
+            <button class="diet-filter-btn" data-diet="non-veg"><i class="bi bi-caret-up-fill text-danger fs-xs me-1"></i> Non-Veg</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Slider -->
+      <div class="category-slider mb-4" id="categorySlider">
+        <!-- JS rendered categories -->
+      </div>
+
+      <!-- Food Grid -->
+      <div class="row g-4" id="menuGridContainer">
+        {% for item in FoodItemInfo %}
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-3 animate-slide-up">
+          <div class="food-card" onclick="openFoodDetailModal('m1')">
+            <div class="food-card-img-wrapper">
+              <img src="{{ item.FoodItemImage }}" alt="{{item.FoodItemName}}" class="food-card-img" loading="lazy">
+              <div class="prep-time-badge"><i class="bi bi-clock"></i> {{item.FoodPreparationTime}} min</div>
+            </div>
+            <div class="food-card-body">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <span class="badge bg-light text-secondary border fs-xs fw-semibold">{{item.category}}</span>
+                <span class="food-rating"><i class="bi bi-star-fill"></i> 4.9</span>
+              </div>
+              <h3 class="food-title">{{item.FoodItemName}}</h3>
+              <p class="food-desc">{{item.FoodItemDescription}}</p>
+              <div class="food-card-footer">
+                <div class="food-price">₹{{item.FoodItemPrice}}</div>
+                <div class="d-flex gap-2">
+                  <button class="btn-add-cart" onclick="event.stopPropagation(); EMenuState.addToCart('m1')"><i class="bi bi-plus-lg me-1"></i> Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+         </div>
+        {% endfor %}
+    </div>
+  </section>
+
+  <!-- Floating Mobile Cart Footer Button -->
+  <div class="position-fixed bottom-0 start-0 end-0 p-3 d-lg-none z-3" style="background: linear-gradient(0deg, rgba(248,249,250,1) 70%, rgba(248,249,250,0) 100%);">
+    <a href="{% url 'cart'%}" class="btn btn-primary-gradient w-100 py-3 d-flex justify-content-between align-items-center shadow-lg">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-cart3 fs-5"></i>
+        <span>View Order Cart</span>
+      </div>
+      <span class="badge bg-white text-primary rounded-pill px-3 py-2 cart-count-badge">0</span>
+    </a>
+  </div>
+
+  <!-- Table Select Modal -->
+  <div class="modal fade" id="tableSelectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-header-title fw-bold mb-0"><i class="bi bi-geo-alt-fill text-primary me-2"></i>Select Table Number</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted fs-sm">Select your current dining table.</p>
+          <div class="row g-2">
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 1')">Table 1</button></div>
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 2')">Table 2</button></div>
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 3')">Table 3</button></div>
+            <div class="col-4"><button class="btn btn-primary w-100 py-2" onclick="changeTable('Table 4')">Table 4</button></div>
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 5')">Table 5</button></div>
+            <div class="col-4"><button class="btn btn-outline-dark w-100 py-2" onclick="changeTable('Table 8')">Table 8</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="{% static 'css/bootstrap.min.css' %}"></script>
+  <script src="{% static 'js/script.js'%}"></script>
+</body>
+</html>
