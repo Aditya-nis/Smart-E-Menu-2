@@ -340,8 +340,18 @@ function renderFoodModalContent(item) {
         <div class="position-relative rounded-4 overflow-hidden shadow-sm" style="height: 220px; max-height: 280px;">
           <div class="diet-badge ${item.type === 'veg' ? 'veg' : 'non-veg'}" style="top: 12px; left: 12px;"></div>
           <img src="${item.image}" alt="${item.name}" class="w-100 h-100 object-fit-cover">
+<<<<<<< HEAD
           <div class="prep-time-badge" style="bottom: 12px; right: 12px;">
             <i class="bi bi-clock"></i> ${item.prepTime} min
+=======
+<<<<<<< HEAD
+          <div class="prep-time-badge" style="bottom: 12px; right: 12px; position:absolute;">
+            <i class="bi bi-clock"></i> ${item.prepTime}
+=======
+          <div class="prep-time-badge" style="bottom: 12px; right: 12px;">
+            <i class="bi bi-clock"></i> ${item.prepTime} min
+>>>>>>> ed342c5 (07-09-2026)
+>>>>>>> 9055b7b (last commit)
           </div>
         </div>
       </div>
@@ -407,8 +417,16 @@ function addModalItemToCart(foodId, name = "", price = 0, image = "", type = "ve
   modalCurrentQty = 1;
 }
 
+<<<<<<< HEAD
 
 // Table Selection Selector Handler
+=======
+<<<<<<< HEAD
+=======
+
+// Table Selection Selector Handler
+>>>>>>> ed342c5 (07-09-2026)
+>>>>>>> 9055b7b (last commit)
 function initTablePicker() {
   const currentTable = EMenuState.getSelectedTable();
   const tableBtn = document.getElementById('tablePillNav');
@@ -867,6 +885,12 @@ function applyCoupon() {
   renderCartView();
 }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+async function proceedToCheckout() {
+=======
+>>>>>>> 9055b7b (last commit)
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
@@ -883,6 +907,10 @@ function getCookie(name) {
 }
 
 function proceedToCheckout() {
+<<<<<<< HEAD
+=======
+>>>>>>> ed342c5 (07-09-2026)
+>>>>>>> 9055b7b (last commit)
   const cart = EMenuState.getCart();
   if (cart.length === 0) {
     showToast('Your cart is empty!', 'danger');
@@ -890,6 +918,71 @@ function proceedToCheckout() {
   }
 
   const tableNum = EMenuState.getSelectedTable();
+<<<<<<< HEAD
+  const specialInstructions = document.getElementById('orderNotes')?.value || '';
+  const csrftoken = getCookie('csrftoken') || '';
+=======
+<<<<<<< HEAD
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const gst = Math.round(subtotal * 0.05);
+  const discount = Math.round((subtotal * appliedDiscount) / 100);
+  const grandTotal = subtotal + gst - discount;
+  const user = EMenuState.getUser();
+>>>>>>> 9055b7b (last commit)
+
+  fetch('/orders/place/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken,
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({
+      items: cart,
+      special_instructions: specialInstructions,
+      table_number: tableNum
+    })
+  })
+  .then(response => {
+    if (response.status === 401) {
+      showToast('Please log in first to place your order.', 'danger');
+      setTimeout(() => { window.location.href = '/account/login/'; }, 1500);
+      return null;
+    }
+<<<<<<< HEAD
+=======
+  } catch (err) {
+    console.log('Saved order locally:', err);
+  }
+
+  const newOrder = {
+    id: orderId,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    status: 'Received',
+    priority: 'Normal',
+    tableNumber: tableNum,
+    customerName: user.name || 'Guest Diner',
+    items: cart,
+    specialInstructions: document.getElementById('orderNotes')?.value || 'None',
+    subtotal: subtotal,
+    gst: gst,
+    discount: discount,
+    grandTotal: grandTotal,
+    paymentStatus: 'Pending',
+    paymentMethod: 'UPI'
+  };
+
+  const orders = EMenuState.getOrders();
+  orders.unshift(newOrder);
+  EMenuState.saveOrders(orders);
+  EMenuState.setActiveOrderId(newOrder.id);
+  EMenuState.clearCart();
+
+  showToast('Order Placed Successfully! Sent straight to Chef Kitchen.', 'success');
+  setTimeout(() => {
+    window.location.href = 'order-tracking.html';
+  }, 1000);
+=======
   const specialInstructions = document.getElementById('orderNotes')?.value || '';
   const csrftoken = getCookie('csrftoken') || '';
 
@@ -912,6 +1005,7 @@ function proceedToCheckout() {
       setTimeout(() => { window.location.href = '/account/login/'; }, 1500);
       return null;
     }
+>>>>>>> 9055b7b (last commit)
     return response.json();
   })
   .then(data => {
@@ -930,6 +1024,10 @@ function proceedToCheckout() {
     console.error(err);
     showToast('Failed to connect to server. Please try again.', 'danger');
   });
+<<<<<<< HEAD
+=======
+>>>>>>> ed342c5 (07-09-2026)
+>>>>>>> 9055b7b (last commit)
 }
 
 
