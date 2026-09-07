@@ -2,8 +2,13 @@ from django.contrib import admin
 
 from menu.models import FoodCategory, FoodMenu
 
-# To Register the Food Category .
-admin.site.register(FoodCategory)
+@admin.register(FoodCategory)
+class FoodCategoryAdmin(admin.ModelAdmin):
+    list_display = ("FoodCategoryId", "FoodCategoryName", "FoodCategoryIcon", "FoodCategoryDescription")
+    search_fields = ("FoodCategoryName",)
 
-# To Register the Menu Item
-admin.site.register(FoodMenu)
+@admin.register(FoodMenu)
+class FoodMenuAdmin(admin.ModelAdmin):
+    list_display = ("FoodItemId", "FoodItemName", "category", "FoodItemType", "FoodItemPrice", "FoodItemRating", "FoodPreparationTime", "FoodItemAvailable")
+    list_filter = ("category", "FoodItemType", "FoodItemAvailable")
+    search_fields = ("FoodItemName", "FoodItemDescription", "FoodItemIngredients")

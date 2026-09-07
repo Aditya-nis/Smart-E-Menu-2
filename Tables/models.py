@@ -77,4 +77,5 @@ class SeatBooking(models.Model):
     )
 
     def __str__(self):
-        return self.User.UserName
+        return f"Booking #{self.SeatBookingId} - {self.User.UserName} ({self.Table.TableName})"
+

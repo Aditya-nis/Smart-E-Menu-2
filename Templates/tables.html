@@ -70,8 +70,13 @@ footer p{
                   <i class="bi bi-geo-alt-fill"></i>
                 </div>
                 <div>
-                  <h6 class="fw-bold text-dark mb-0 fs-6" id="currentTableDisplay">Table 4</h6>
-                  <span class="fs-xs text-success fw-semibold"><i class="bi bi-check-circle-fill me-1"></i>Active Seating</span>
+                  {% if current_user_table %}
+                    <h6 class="fw-bold text-dark mb-0 fs-6" id="currentTableDisplay">{{ current_user_table.TableName }}</h6>
+                    <span class="fs-xs text-success fw-semibold"><i class="bi bi-check-circle-fill me-1"></i>Active Seating</span>
+                  {% else %}
+                    <h6 class="fw-bold text-dark mb-0 fs-6" id="currentTableDisplay">No Table Booked</h6>
+                    <span class="fs-xs text-muted fw-semibold"><i class="bi bi-info-circle me-1"></i>Select an Available Table</span>
+                  {% endif %}
                 </div>
               </div>
               <button class="btn btn-xs btn-outline-primary rounded-pill px-2.5 py-1" onclick="callWaiterAction()">
@@ -142,8 +147,14 @@ footer p{
       <!-- Filter Tabs Slider -->
       <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
         <div class="d-flex gap-2 overflow-x-auto pb-2 table-filter-scroll w-100 max-w-xl">
-          <button class="btn btn-dark rounded-pill px-3.5 py-1.5 fs-xs fw-bold table-filter-btn active" data-filter="all">All Zones</button>
+          <a href="{% url 'tables' %}" class="btn {% if selected_zone == 'all' and selected_status == 'all' %}btn-dark{% else %}btn-outline-dark{% endif %} rounded-pill px-3.5 py-1.5 fs-xs fw-bold table-filter-btn">All Zones</a>
+          <a href="{% url 'tables' %}?status=available" class="btn {% if selected_status == 'available' %}btn-dark{% else %}btn-outline-dark{% endif %} rounded-pill px-3.5 py-1.5 fs-xs fw-bold table-filter-btn">Available Only</a>
+          <a href="{% url 'tables' %}?zone=Indoor" class="btn {% if selected_zone == 'Indoor' %}btn-dark{% else %}btn-outline-dark{% endif %} rounded-pill px-3.5 py-1.5 fs-xs fw-bold table-filter-btn">Indoor</a>
+          <a href="{% url 'tables' %}?zone=Garden" class="btn {% if selected_zone == 'Garden' %}btn-dark{% else %}btn-outline-dark{% endif %} rounded-pill px-3.5 py-1.5 fs-xs fw-bold table-filter-btn">Garden</a>
+          <a href="{% url 'tables' %}?zone=VIP" class="btn {% if selected_zone == 'VIP' %}btn-dark{% else %}btn-outline-dark{% endif %} rounded-pill px-3.5 py-1.5 fs-xs fw-bold table-filter-btn">VIP</a>
+          <a href="{% url 'tables' %}?zone=Rooftop" class="btn {% if selected_zone == 'Rooftop' %}btn-dark{% else %}btn-outline-dark{% endif %} rounded-pill px-3.5 py-1.5 fs-xs fw-bold table-filter-btn">Rooftop</a>
         </div>
+
 
         <div class="text-muted fs-xs fw-semibold">
           Showing <span class="text-dark fw-bold" id="tablesCountLabel">{{total_seat}}</span>

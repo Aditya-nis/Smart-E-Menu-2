@@ -1,3 +1,4 @@
 from django.db import models
+from Kitchen.models import FoodOrder, FoodOrderItem
 
-# Create your models here.
+__all__ = ['FoodOrder', 'FoodOrderItem']

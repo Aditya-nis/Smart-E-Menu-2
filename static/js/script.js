@@ -63,31 +63,52 @@ class EMenuState {
     EMenuState.updateCartBadge();
   }
 
-  static addToCart(foodId, qty = 1, specialNote = "") {
-    const item = MENU_DATA.find(f => f.id === foodId);
-    if (!item) return;
+  static addToCart(foodId, qty = 1, specialNote = "", name = "", price = 0, image = "", type = "veg") {
+    let item = (typeof MENU_DATA !== 'undefined' && Array.isArray(MENU_DATA)) ? MENU_DATA.find(f => String(f.id) === String(foodId)) : null;
+
+    let itemName = item ? item.name : (name || `Dish #${foodId}`);
+    let itemPrice = item ? item.price : (price || 0);
+    let itemImage = item ? item.image : (image || '');
+    let itemType = item ? item.type : (type || 'veg');
 
     let cart = EMenuState.getCart();
-    const existingIndex = cart.findIndex(c => c.id === foodId);
+    const existingIndex = cart.findIndex(c => String(c.id) === String(foodId));
 
     if (existingIndex > -1) {
       cart[existingIndex].qty += qty;
       if (specialNote) cart[existingIndex].specialNote = specialNote;
     } else {
       cart.push({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        image: item.image,
-        type: item.type,
+        id: foodId,
+        name: itemName,
+        price: itemPrice,
+        image: itemImage,
+        type: itemType,
         qty: qty,
         specialNote: specialNote
       });
     }
 
     EMenuState.setCart(cart);
-    showToast(`Added "${item.name}" to your cart!`, 'success');
+    showToast(`Added "${itemName}" to your cart!`, 'success');
+
+    // Sync with Django session backend
+    const csrftoken = (typeof getCookie === 'function') ? getCookie('csrftoken') : '';
+    fetch('/orders/add/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({
+        food_id: foodId,
+        qty: qty,
+        special_note: specialNote
+      })
+    }).catch(err => console.error(err));
   }
+
 
   static updateCartQty(foodId, delta) {
     let cart = EMenuState.getCart();
@@ -274,9 +295,25 @@ function handleFavClick(event, foodId) {
 
 // Food Details Modal Popup
 function openFoodDetailModal(foodId) {
-  const item = MENU_DATA.find(f => f.id === foodId);
-  if (!item) return;
+  let item = (typeof MENU_DATA !== 'undefined' && Array.isArray(MENU_DATA)) ? MENU_DATA.find(f => String(f.id) === String(foodId)) : null;
 
+  if (item) {
+    renderFoodModalContent(item);
+  } else {
+    fetch(`/food/${foodId}/`, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.id) {
+        renderFoodModalContent(data);
+      }
+    })
+    .catch(err => console.error(err));
+  }
+}
+
+function renderFoodModalContent(item) {
   let modalElem = document.getElementById('foodDetailModal');
   if (!modalElem) {
     const modalHTML = `
@@ -295,7 +332,7 @@ function openFoodDetailModal(foodId) {
   }
 
   const container = document.getElementById('foodModalContent');
-  const isFav = EMenuState.getFavorites().includes(item.id);
+  modalCurrentQty = 1;
 
   container.innerHTML = `
     <div class="row g-3 g-md-4">
@@ -304,7 +341,7 @@ function openFoodDetailModal(foodId) {
           <div class="diet-badge ${item.type === 'veg' ? 'veg' : 'non-veg'}" style="top: 12px; left: 12px;"></div>
           <img src="${item.image}" alt="${item.name}" class="w-100 h-100 object-fit-cover">
           <div class="prep-time-badge" style="bottom: 12px; right: 12px;">
-            <i class="bi bi-clock"></i> ${item.prepTime}
+            <i class="bi bi-clock"></i> ${item.prepTime} min
           </div>
         </div>
       </div>
@@ -338,7 +375,7 @@ function openFoodDetailModal(foodId) {
                 <span class="qty-val" id="modalQtyVal">1</span>
                 <button class="qty-btn" onclick="adjustModalQty(1)"><i class="bi bi-plus"></i></button>
               </div>
-              <button class="btn btn-primary-gradient px-3 px-sm-4" onclick="addModalItemToCart('${item.id}')">
+              <button class="btn btn-primary-gradient px-3 px-sm-4" onclick="addModalItemToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${item.image.replace(/'/g, "\\'")}', '${item.type}')">
                 <i class="bi bi-cart-plus me-1"></i> Add
               </button>
             </div>
@@ -359,9 +396,9 @@ function adjustModalQty(delta) {
   if (qtyElem) qtyElem.innerText = modalCurrentQty;
 }
 
-function addModalItemToCart(foodId) {
+function addModalItemToCart(foodId, name = "", price = 0, image = "", type = "veg") {
   const notes = document.getElementById('modalSpecialNotes')?.value || '';
-  EMenuState.addToCart(foodId, modalCurrentQty, notes);
+  EMenuState.addToCart(foodId, modalCurrentQty, notes, name, price, image, type);
   const modalElem = document.getElementById('foodDetailModal');
   if (modalElem) {
     const bsModal = bootstrap.Modal.getOrCreateInstance(modalElem);
@@ -369,6 +406,7 @@ function addModalItemToCart(foodId) {
   }
   modalCurrentQty = 1;
 }
+
 
 // Table Selection Selector Handler
 function initTablePicker() {
@@ -829,6 +867,21 @@ function applyCoupon() {
   renderCartView();
 }
 
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 function proceedToCheckout() {
   const cart = EMenuState.getCart();
   if (cart.length === 0) {
@@ -837,39 +890,48 @@ function proceedToCheckout() {
   }
 
   const tableNum = EMenuState.getSelectedTable();
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  const gst = Math.round(subtotal * 0.05);
-  const discount = Math.round((subtotal * appliedDiscount) / 100);
-  const grandTotal = subtotal + gst - discount;
+  const specialInstructions = document.getElementById('orderNotes')?.value || '';
+  const csrftoken = getCookie('csrftoken') || '';
 
-  const newOrder = {
-    id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    status: 'Received',
-    priority: 'Normal',
-    tableNumber: tableNum,
-    customerName: 'Guest Diner',
-    items: cart,
-    specialInstructions: document.getElementById('orderNotes')?.value || 'None',
-    subtotal: subtotal,
-    gst: gst,
-    discount: discount,
-    grandTotal: grandTotal,
-    paymentStatus: 'Pending',
-    paymentMethod: 'UPI'
-  };
-
-  const orders = EMenuState.getOrders();
-  orders.unshift(newOrder);
-  EMenuState.saveOrders(orders);
-  EMenuState.setActiveOrderId(newOrder.id);
-  EMenuState.clearCart();
-
-  showToast('Order Placed Successfully! Redirecting to Kitchen Status...', 'success');
-  setTimeout(() => {
-    window.location.href = 'order-tracking.html';
-  }, 1200);
+  fetch('/orders/place/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken,
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({
+      items: cart,
+      special_instructions: specialInstructions,
+      table_number: tableNum
+    })
+  })
+  .then(response => {
+    if (response.status === 401) {
+      showToast('Please log in first to place your order.', 'danger');
+      setTimeout(() => { window.location.href = '/account/login/'; }, 1500);
+      return null;
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (!data) return;
+    if (data.status === 'success') {
+      EMenuState.clearCart();
+      showToast(`Order ${data.order_id} Placed Successfully! Redirecting...`, 'success');
+      setTimeout(() => {
+        window.location.href = '/menu/Order-Tracking/';
+      }, 1200);
+    } else {
+      showToast(data.message || 'Error placing order.', 'danger');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    showToast('Failed to connect to server. Please try again.', 'danger');
+  });
 }
+
 
 // --------------------------------------------------------------------------
 // ORDER TRACKING CONTROLLER

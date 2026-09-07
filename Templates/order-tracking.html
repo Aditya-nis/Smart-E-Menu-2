@@ -85,16 +85,17 @@
     <div class="container">
       <div class="max-w-3xl mx-auto">
 
+        {% if active_order %}
         <!-- Active Order Card Header -->
         <div class="card border-0 shadow-md rounded-4 overflow-hidden mb-4 animate-slide-up">
           <div class="card-header bg-primary-gradient text-white p-4 d-flex justify-content-between align-items-center">
             <div>
               <span class="badge bg-white text-primary fw-bold px-3 py-1 rounded-pill mb-1">Live Order Status</span>
-              <h3 class="fw-bold mb-0 text-white" id="trackingOrderId">ORD-1042</h3>
+              <h3 class="fw-bold mb-0 text-white" id="trackingOrderId">ORD-{{ active_order.OrderId }}</h3>
             </div>
             <div class="text-end">
               <span class="fs-xs text-white-50 d-block">Delivering To</span>
-              <strong class="fs-5 text-white" id="trackingTable">Table 4</strong>
+              <strong class="fs-5 text-white" id="trackingTable">{{ active_order.Table.TableName }}</strong>
             </div>
           </div>
 
@@ -105,44 +106,43 @@
               <div class="d-flex align-items-center gap-3">
                 <div class="fs-2 text-warning"><i class="bi bi-clock-history"></i></div>
                 <div>
-                  <h6 class="fw-bold mb-0 text-dark">Estimated Preparation Time</h6>
-                  <small class="text-muted">Chef is crafting your gourmet dishes fresh.</small>
+                  <h6 class="fw-bold mb-0 text-dark">Current Order Status: <span class="text-primary">{{ active_order.OrderStatus }}</span></h6>
+                  <small class="text-muted">Placed at {{ active_order.OrderDateTime|date:"h:i A" }} ({{ active_order.OrderDateTime|timesince }} ago)</small>
                 </div>
               </div>
               <div class="text-end">
-                <span class="fs-3 fw-extrabold text-dark" id="countdownTimer">12:45</span>
-                <span class="fs-xs text-muted d-block">Mins Remaining</span>
+                <span class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill fw-bold">{{ active_order.OrderStatus }}</span>
               </div>
             </div>
 
             <!-- Animated Tracking Timeline -->
             <div class="tracking-timeline">
               <div class="tracking-progress-bar">
-                <div class="tracking-progress-fill" id="trackingFillBar"></div>
+                <div class="tracking-progress-fill" id="trackingFillBar" style="width: {% if active_order.OrderStatus == 'Received' %}16%{% elif active_order.OrderStatus == 'Accepted' %}33%{% elif active_order.OrderStatus == 'Preparing' %}50%{% elif active_order.OrderStatus == 'Cooking' %}66%{% elif active_order.OrderStatus == 'Ready' %}83%{% elif active_order.OrderStatus == 'Served' or active_order.OrderStatus == 'Completed' %}100%{% else %}0%{% endif %};"></div>
               </div>
 
               <div class="tracking-steps">
-                <div class="tracking-step completed">
+                <div class="tracking-step {% if active_order.OrderStatus == 'Received' %}active{% else %}completed{% endif %}">
                   <div class="step-icon-wrapper"><i class="bi bi-check-lg"></i></div>
                   <div class="step-label">Received</div>
                 </div>
-                <div class="tracking-step completed">
+                <div class="tracking-step {% if active_order.OrderStatus == 'Accepted' %}active{% elif active_order.OrderStatus == 'Preparing' or active_order.OrderStatus == 'Cooking' or active_order.OrderStatus == 'Ready' or active_order.OrderStatus == 'Served' or active_order.OrderStatus == 'Completed' %}completed{% endif %}">
                   <div class="step-icon-wrapper"><i class="bi bi-check-lg"></i></div>
                   <div class="step-label">Accepted</div>
                 </div>
-                <div class="tracking-step active">
+                <div class="tracking-step {% if active_order.OrderStatus == 'Preparing' %}active{% elif active_order.OrderStatus == 'Cooking' or active_order.OrderStatus == 'Ready' or active_order.OrderStatus == 'Served' or active_order.OrderStatus == 'Completed' %}completed{% endif %}">
                   <div class="step-icon-wrapper"><i class="bi bi-egg-fried"></i></div>
                   <div class="step-label">Preparing</div>
                 </div>
-                <div class="tracking-step">
+                <div class="tracking-step {% if active_order.OrderStatus == 'Cooking' %}active{% elif active_order.OrderStatus == 'Ready' or active_order.OrderStatus == 'Served' or active_order.OrderStatus == 'Completed' %}completed{% endif %}">
                   <div class="step-icon-wrapper"><i class="bi bi-fire"></i></div>
                   <div class="step-label">Cooking</div>
                 </div>
-                <div class="tracking-step">
+                <div class="tracking-step {% if active_order.OrderStatus == 'Ready' %}active{% elif active_order.OrderStatus == 'Served' or active_order.OrderStatus == 'Completed' %}completed{% endif %}">
                   <div class="step-icon-wrapper"><i class="bi bi-bell"></i></div>
                   <div class="step-label">Ready</div>
                 </div>
-                <div class="tracking-step">
+                <div class="tracking-step {% if active_order.OrderStatus == 'Served' or active_order.OrderStatus == 'Completed' %}active completed{% endif %}">
                   <div class="step-icon-wrapper"><i class="bi bi-person-check"></i></div>
                   <div class="step-label">Served</div>
                 </div>
@@ -153,19 +153,27 @@
             <div class="bg-light p-3 rounded-4 mt-4">
               <h5 class="fw-bold fs-6 mb-3"><i class="bi bi-bag-fill text-primary me-2"></i>Ordered Dishes Summary</h5>
               <div id="trackingItemsContainer">
-                <!-- JS populated -->
+                {% for item in active_order.items.all %}
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div>
+                    <span class="fw-semibold">{{ item.FoodItem.FoodItemName }}</span>
+                    <span class="text-muted ms-2">x {{ item.Quantity }}</span>
+                  </div>
+                  <span class="fw-bold">₹{{ item.ItemPrice }}</span>
+                </div>
+                {% endfor %}
               </div>
 
               <div class="d-flex justify-content-between align-items-center pt-3 mt-2 border-top">
                 <span class="fw-bold text-muted">Total Amount Payable</span>
-                <span class="fs-4 fw-extrabold text-primary" id="trackingTotal">₹0</span>
+                <span class="fs-4 fw-extrabold text-primary" id="trackingTotal">₹{{ active_order.TotalAmount }}</span>
               </div>
             </div>
 
             <!-- Quick Service Buttons -->
             <div class="row g-3 mt-4">
               <div class="col-6">
-                <button class="btn btn-outline-dark w-100 py-2 rounded-pill fs-sm" onclick="showToast('Waiter notified! Arriving at your table shortly.', 'info')">
+                <button class="btn btn-outline-dark w-100 py-2 rounded-pill fs-sm" onclick="callWaiterAction()">
                   <i class="bi bi-bell-fill me-1 text-warning"></i> Call Waiter
                 </button>
               </div>
@@ -178,6 +186,14 @@
 
           </div>
         </div>
+        {% else %}
+        <div class="card border-0 shadow-md rounded-4 overflow-hidden mb-4 p-5 text-center">
+          <div class="display-3 text-warning mb-3"><i class="bi bi-clock-history"></i></div>
+          <h3 class="fw-bold">No Active Order Found</h3>
+          <p class="text-muted">You haven't placed an order yet. Select a table and browse our gourmet menu to get started!</p>
+          <a href="{% url 'menu' %}" class="btn btn-primary-gradient px-4 py-2 mt-2">Explore Menu & Order</a>
+        </div>
+        {% endif %}
 
         <div class="text-center">
           <a href="{% url 'menu'%}" class="text-muted text-decoration-none fs-sm"><i class="bi bi-arrow-left me-1"></i> Order More Dishes</a>
@@ -188,7 +204,8 @@
   </section>
 
   <!-- Scripts -->
-   <script src="{% static 'css/bootstrap.min.css' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{% static 'js/script.js'%}"></script>
 </body>
 </html>
+

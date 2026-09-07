@@ -135,7 +135,7 @@
         <!-- Static Food Item Cards -->
         {% for item in context.FoodItemInfo %}
         <div class="col-12 col-sm-6 col-lg-4 col-xl-3 animate-slide-up">
-          <div class="food-card" onclick="openFoodDetailModal('m1')">
+          <div class="food-card" onclick="openFoodDetailModal('{{ item.FoodItemId }}')">
             <span class="badge bg-success-subtle text-success fs-xxs fw-bold mb-1">{{item.FoodItemType}}</span>
 
             <div class="food-card-img-wrapper">
@@ -149,12 +149,11 @@
                 <span class="food-rating"><i class="bi bi-star-fill"></i> {{item.FoodItemRating}}</span>
               </div>
               <h3 class="food-title">{{item.FoodItemName}}</h3>
-              <p class="food-desc">{{item.FoodItemDescription}}.</p>
-               <div >{{item.FoodItemType}}</div>
+              <p class="food-desc">{{item.FoodItemDescription}}</p>
               <div class="food-card-footer">
                 <div class="food-price">₹{{item.FoodItemPrice}}</div>
                 <div class="d-flex gap-2">
-                  <button class="btn-add-cart" onclick="event.stopPropagation(); EMenuState.addToCart('m1')"><i class="bi bi-plus-lg me-1"></i> Add</button>
+                  <button class="btn-add-cart" onclick="event.stopPropagation(); EMenuState.addToCart('{{ item.FoodItemId }}', 1, '', '{{ item.FoodItemName|escapejs }}', {{ item.FoodItemPrice }}, '{{ item.FoodItemImage|escapejs }}', '{{ item.FoodItemType|escapejs }}')"><i class="bi bi-plus-lg me-1"></i> Add</button>
                 </div>
               </div>
             </div>
@@ -279,7 +278,8 @@
   </footer>
 
   <!-- Scripts -->
-   <script src="{% static 'css/bootstrap.min.css' %}"></script>
-<script src="{% static 'js/script.js'%}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/script.js'%}"></script>
 </body>
 </html>
+
