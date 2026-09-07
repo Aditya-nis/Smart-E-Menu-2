@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+staticfiles/
+media/*
+!media/.gitkeep
+
+# Local development artifacts
+*.sqlite3-journal

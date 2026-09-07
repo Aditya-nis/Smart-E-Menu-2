@@ -16,4 +16,4 @@ class FoodOrderAdmin(admin.ModelAdmin):
 @admin.register(FoodOrderItem)
 class FoodOrderItemAdmin(admin.ModelAdmin):
     list_display = ("OrderItemId", "Order", "FoodItem", "Quantity", "ItemPrice", "SpecialInstructions")
-    search_fields = ("Order__OrderId", "FoodItem__FoodItemName")
+    search_fields = ("Order__OrderId", "FoodItem__FoodItemName")

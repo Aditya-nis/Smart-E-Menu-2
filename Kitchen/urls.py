@@ -6,4 +6,4 @@ urlpatterns = [
     path("pending/", views.pending_orders, name="pending_orders"),
     path("update-status/<int:order_id>/", views.update_status, name="update_status"),
     path("update-status/", views.update_status, name="update_status_post"),
-]
+]

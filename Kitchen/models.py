@@ -117,4 +117,4 @@ class FoodOrderItem(models.Model):
     )
 
     def __str__(self):
-        return f"{self.Quantity}x {self.FoodItem.FoodItemName} (Order #{self.Order.OrderId})"
+        return f"{self.Quantity}x {self.FoodItem.FoodItemName} (Order #{self.Order.OrderId})"
