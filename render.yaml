@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: smart-e-menu
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python collectstatic.py
+    startCommand: gunicorn EMenu.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: EMenu.settings
+      - key: DJANGO_SECRET_KEY
+        value: ${DJANGO_SECRET_KEY}
+      - key: DATABASE_URL
+        value: ${DATABASE_URL}
+      - key: ALLOWED_HOSTS
+        value: ${ALLOWED_HOSTS}
