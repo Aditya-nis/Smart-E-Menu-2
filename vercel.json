@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "build": {
+    "command": "python collectstatic.py"
+  },
   "builds": [
     { "src": "api/index.py", "use": "@vercel/python" }
   ],
